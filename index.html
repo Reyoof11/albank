@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فحص الآيبان</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Amiri', serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            background-color: #fff;
+            color: #333;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .bank-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 10px;
+        }
+        .navbar1 {
+            background-color: #fff;
+        }
+        .navbar1 .nav-link {
+            color: #333 !important;
+        }
+        .navbar1 .dropdown-menu {
+            background-color: #e0e0e0;
+        }
+        .navbar1 .dropdown-item {
+            color: #333 !important;
+        }
+        .navbar1 .dropdown-item:hover {
+            background-color: #d0d0d0;
+        }
+        .navbar1 .btn {
+            background-color: #333;
+            color: #fff;
+        }
+        .navbar1 .btn:hover {
+            background-color: #555;
+        }
+        .card-body {
+            background-color: #dcdcdc;
+            border: 1px solid #dedede;
+        }
+        .btn-primary {
+            background-color: #333;
+            border-color: #333;
+        }
+        .btn-primary:hover {
+            background-color: #555;
+            border-color: #555;
+        }
+        .alert-primary {
+            background-color: #333;
+            border-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="bank.png" alt="Bank Logo" class="bank-image">
+    <h1>برنامج فحص الآيبان</h1>
+    <p>تحقق من صحة رقم الآيبان واكتشف البنك الذي ينتمي إليه.</p>
+</header>
+
+<main>
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-center text-center">
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="alert alert-primary">تحقق من الآيبان</h2>
+                        <label for="iban" class="form-label">أدخل الآيبان</label>
+                        <input type="text" class="form-control form-control-lg mb-3" id="iban" placeholder="SA1234567890123456789012">
+                        <button class="btn btn-primary" onclick="GetIban()">افحص</button>
+                        <div class="mt-3">
+                            <strong id="result">النتيجة ستظهر هنا</strong>
+                        </div>
+                        <div class="mt-3">
+                            <table class="table">
+                                <tr>
+                                    <th>اسم البنك</th>
+                                    <td id="bankName">--</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div class="mt-5"></div>
+
+<script>
+    const banks = [
+        { samaCode: '55', nameAr: 'البنك السعودي الفرنسي' },
+        { samaCode: '80', nameAr: 'بنك الراجحي' },
+        { samaCode: '10', nameAr: 'البنك الأهلي التجاري' },
+        { samaCode: '45', nameAr: 'ساب' },
+        { samaCode: '20', nameAr: 'بنك الرياض' },
+        { samaCode: '40', nameAr: 'سامبا' },
+        { samaCode: '05', nameAr: 'بنك الإنماء' },
+        { samaCode: '50', nameAr: 'البنك الأول' },
+        { samaCode: '60', nameAr: 'بنك الجزيرة' },
+        { samaCode: '65', nameAr: 'البنك السعودي للاستثمار' },
+        { samaCode: '15', nameAr: 'بنك البلاد' },
+        { samaCode: '30', nameAr: 'البنك العربي الوطني' },
+        { samaCode: '90', nameAr: 'بنك الخليج' }
+    ];
+
+    function checkIban(iban) {
+        iban = iban.replace(/\s+/g, '');
+        return iban.length === 24 && iban.startsWith("SA");
+    }
+
+    function GetIban() {
+        const ibanInput = document.getElementById("iban").value.trim();
+        const resultElement = document.getElementById("result");
+        const bankNameElement = document.getElementById("bankName");
+
+        if (!checkIban(ibanInput)) {
+            resultElement.innerHTML = "الآيبان غير صحيح";
+            resultElement.classList.remove("text-success");
+            resultElement.classList.add("text-danger");
+            bankNameElement.innerHTML = "--";
+            return;
+        }
+
+        const samaCode = ibanInput.substring(4, 6);
+        const bank = banks.find(b => b.samaCode === samaCode);
+
+        if (bank) {
+            resultElement.innerHTML = "الآيبان صحيح";
+            resultElement.classList.remove("text-danger");
+            resultElement.classList.add("text-success");
+            bankNameElement.innerHTML = bank.nameAr;
+        } else {
+            resultElement.innerHTML = "الآيبان صحيح، لكن لم يتم العثور على البنك";
+            resultElement.classList.remove("text-danger");
+            resultElement.classList.add("text-warning");
+            bankNameElement.innerHTML = "--";
+        }
+    }
+</script>
+
+</body>
+</html>
